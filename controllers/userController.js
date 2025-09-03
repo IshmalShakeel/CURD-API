@@ -133,59 +133,6 @@ const userController = {
     }
   },
 
-  // Partially update user
-  patchUser: (req, res) => {
-    try {
-      const { name, email, age } = req.body;
-      
-      // Validate input
-      const validationErrors = validatePartialUser({ name, email, age });
-      if (validationErrors.length > 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'Validation failed',
-          errors: validationErrors
-        });
-      }
-      
-      // Check if email already exists (excluding current user)
-      if (email && userModel.emailExists(email, parseInt(req.params.id))) {
-        return res.status(409).json({
-          success: false,
-          message: 'User with this email already exists'
-        });
-      }
-      
-      // Prepare updates
-      const updates = {};
-      if (name !== undefined) updates.name = name.trim();
-      if (email !== undefined) updates.email = email.trim().toLowerCase();
-      if (age !== undefined) updates.age = parseInt(age);
-      
-      // Update user
-      const updatedUser = userModel.patchUser(req.params.id, updates);
-      
-      if (!updatedUser) {
-        return res.status(404).json({
-          success: false,
-          message: 'User not found'
-        });
-      }
-      
-      res.status(200).json({
-        success: true,
-        data: updatedUser,
-        message: 'User updated successfully'
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-        error: error.message
-      });
-    }
-  },
-
   // Delete user
   deleteUser: (req, res) => {
     try {

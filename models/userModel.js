@@ -43,15 +43,6 @@ class UserModel {
     return user;
   }
 
-  // Partially update user
-  patchUser(id, updates) {
-    const user = this.getUserById(id);
-    if (!user) return null;
-
-    Object.assign(user, updates);
-    return user;
-  }
-
   // Delete user
   deleteUser(id) {
     const userIndex = this.users.findIndex(user => user.id === parseInt(id));
